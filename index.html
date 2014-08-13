@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Dashy</title>
+    <style>
+      .widget {
+        display: inline-block;
+        margin: 10px;
+        padding: 5px;
+        border: 1px solid red;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      var emitter = new Emitter();
+
+      new Widget("_wow_another_worker_").start();
+      new Widget("_worker_data_key_").start();
+
+      socket.on('message', function(message) {
+        emitter.emit(message.key, message.data);
+      });
+
+      function Emitter() {
+        var events = {};
+
+        return {
+          on: function(eventName, callback) {
+            events[eventName] = events[eventName] || [];
+            events[eventName].push(callback);
+          },
+          emit: function(eventName, data) {
+            listeners = (events[eventName] || []);
+
+            listeners.forEach(function(listener) {
+              listener.call(undefined, data);
+            });
+          }
+        };
+      }
+
+      function Widget(key) {
+        function listenToNewEvents() {
+          emitter.on(key, function(data) {
+            handleNewValue(data);
+          });
+        }
+
+        function handleNewValue(value) {
+          var element = $("#" + key);
+
+          if(element.length == 0) {
+            element = $("<div class='widget'>").appendTo($("body"));
+            element.attr("id", key);
+          }
+
+          element.text(value);
+        }
+
+        function fetchCurrentValue(callback) {
+          $.get('/data/' + key, function(result) {
+            callback(result.data);
+          });
+        }
+
+        return {
+          start: function() {
+            fetchCurrentValue(function(value) {
+              handleNewValue(value);
+              listenToNewEvents();
+            });
+          }
+        };
+      }
+    </script>
+  </body>
+</html>
