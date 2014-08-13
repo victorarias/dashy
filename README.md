@@ -3,11 +3,13 @@ dashy
 
 Simple dashboard system written in JavaScript using ØMQ and WebSockets (socket.io).
 
+This is just a proof of concept for now. I've been studying recently Node.js and its ecosystem and wanted to feel how easy it's to create apps like this using it.
+
 Install
 =====
 
-`brew install zeromq`
-`npm install`
+    brew install zeromq
+    npm install
 
 Run
 =====
