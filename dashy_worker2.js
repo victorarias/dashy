@@ -1,12 +1,13 @@
 "use strict";
 
 const
-  zmq = require('zmq'),
-  publisher = zmq.socket('pub'),
+  request = require('superagent'),
   DATA_KEY = "_wow_another_worker_";
 
 setInterval(function() {
-  publisher.send(JSON.stringify({ key: DATA_KEY, data: new Date() }));
-}, 1000);
-
-publisher.connect('tcp://localhost:5432');
+  request
+    .post('http://localhost:3000/data')
+    .send({ key: DATA_KEY, data: new Date() })
+    .end(function(err, res) {
+    });
+}, 100);

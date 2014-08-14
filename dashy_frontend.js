@@ -1,25 +1,22 @@
 "use strict";
 
 const
-  zmq = require('zmq'),
-  subscriber = zmq.socket('sub'),
   app = require('express')(),
+  bodyParser = require('body-parser'),
   http = require('http').Server(app),
   io = require('socket.io')(http),
   storage = {};
 
-subscriber.subscribe('');
-
-subscriber.on("message", function(message) {
-  message = JSON.parse(message);
-  storage[message.key] = message.data;
-  io.emit('message', message); // pipe to websockets
-});
-
-subscriber.bind('tcp://*:5432');
+app.use(bodyParser());
 
 app.get('/', function(req, res) {
   res.sendfile('index.html');
+});
+
+app.post('/data', function(req, res) {
+  let message = req.body;
+  storage[message.key] = message.data;
+  io.emit('message', message);
 });
 
 app.get('/data/:key', function(req, res) {
