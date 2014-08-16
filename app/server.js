@@ -1,6 +1,6 @@
 const
   app = require('express')(),
-  http = require('http'),
+  http = require('http').Server(app),
   io = require('socket.io')(http),
   bodyParserMiddleware = require('body-parser'),
   profileMiddleware = require('./middleware/profile'),
@@ -25,5 +25,5 @@ app.get('/data/:key', function(req, res) {
 module.exports = app;
 
 if(!module.parent) {
-  http.createServer(app).listen(process.env.PORT || 3000);
+  http.listen(process.env.PORT || 3000);
 }
