@@ -6,7 +6,7 @@ const
   profileMiddleware = require('./middleware/profile'),
   storage = {};
 
-app.use(bodyParserMiddleware.urlencoded({ extended: false }));
+app.use(bodyParserMiddleware.json());
 
 app.get('/', profileMiddleware, function(req, res) {
   res.sendfile('index.html');
