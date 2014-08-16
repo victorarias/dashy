@@ -41,7 +41,7 @@ describe('Profile middleware', function() {
 
     var req = { query: {} };
     var res = getResponseDouble();
-    var spy = sinon.spy(res, 'body');
+    var spy = sinon.spy(res, 'send');
 
     middleware(req, res, function() {});
 
@@ -58,7 +58,7 @@ describe('Profile middleware', function() {
 
   function getResponseDouble() {
     return { status: function() { return this; },
-      body: function() { return this; },
+      send: function() { return this; },
       end: function() {}
     };
   }

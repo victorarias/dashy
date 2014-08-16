@@ -8,7 +8,7 @@ var middleware = function(req, res, next) {
     req.profile = TOKENS[token];
   } else {
     res.status(403).
-      body('Invalid token.').
+      send('Invalid token.').
       end();
   }
 
