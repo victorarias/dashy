@@ -9,6 +9,12 @@ describe('Profile middleware', function() {
   function getValidTokenFor(middleware) {
     return Object.keys(middleware.TOKENS)[0];
   }
+  function getResponseDouble() {
+    return { status: function() { return this; },
+      body: function() { return this; },
+      end: function() {}
+    };
+  }
 
   it('it assigns a profile to the request', function() {
     var middleware = subject();
@@ -20,26 +26,38 @@ describe('Profile middleware', function() {
   });
 
   it('sends an 403 forbidden response if the token is not valid', function() {
-    var spy = sinon.spy();
     var middleware = subject();
 
     var req = { query: { token: 'wow such invalid token' } };
-    var res = { send: spy };
+    var res = getResponseDouble();
+    var spy = sinon.spy(res, 'status');
 
     middleware(req, res, function() {});
 
-    assert(spy.calledWith(403, sinon.match.object));
+    assert(spy.calledWith(403));
   });
 
   it('sends an 403 forbidden response if there is no token', function() {
-    var spy = sinon.spy();
     var middleware = subject();
 
     var req = { query: {} };
-    var res = { send: spy };
+    var res = getResponseDouble();
+    var spy = sinon.spy(res, 'status');
 
     middleware(req, res, function() {});
 
-    assert(spy.calledWith(403, sinon.match.object));
+    assert(spy.calledWith(403));
+  });
+
+  it('sends "Invalid token" as the body when there is no token', function() {
+    var middleware = subject();
+
+    var req = { query: {} };
+    var res = getResponseDouble();
+    var spy = sinon.spy(res, 'body');
+
+    middleware(req, res, function() {});
+
+    assert(spy.calledWith('Invalid token.'));
   });
 });
