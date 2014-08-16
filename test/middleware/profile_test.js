@@ -3,19 +3,6 @@ const assert = require('assert'),
 
 
 describe('Profile middleware', function() {
-  function subject() {
-    return require('../../app/middleware/profile');
-  }
-  function getValidTokenFor(middleware) {
-    return Object.keys(middleware.TOKENS)[0];
-  }
-  function getResponseDouble() {
-    return { status: function() { return this; },
-      body: function() { return this; },
-      end: function() {}
-    };
-  }
-
   it('it assigns a profile to the request', function() {
     var middleware = subject();
     var req = { query: { token: getValidTokenFor(middleware) }};
@@ -60,4 +47,19 @@ describe('Profile middleware', function() {
 
     assert(spy.calledWith('Invalid token.'));
   });
+
+  function subject() {
+    return require('../../app/middleware/profile');
+  }
+
+  function getValidTokenFor(middleware) {
+    return Object.keys(middleware.TOKENS)[0];
+  }
+
+  function getResponseDouble() {
+    return { status: function() { return this; },
+      body: function() { return this; },
+      end: function() {}
+    };
+  }
 });
