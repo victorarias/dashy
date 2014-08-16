@@ -1,12 +1,26 @@
 const
   app = require('express')(),
   http = require('http'),
-  profileMiddleware = require('./middleware/profile');
+  io = require('socket.io')(http),
+  bodyParserMiddleware = require('body-parser'),
+  profileMiddleware = require('./middleware/profile'),
+  storage = {};
 
 app.use(profileMiddleware);
+app.use(bodyParserMiddleware());
 
 app.get('/', function(req, res) {
-  res.send("Hello world!");
+  app.use(bodyParser());
+});
+
+app.post('/data', function(req, res) {
+  var message = req.body;
+  storage[message.key] = message.data;
+  io.emit('message', message);
+});
+
+app.get('/data/:key', function(req, res) {
+  res.json({ data: storage[req.params.key] });
 });
 
 module.exports = app;
