@@ -6,11 +6,10 @@ const
   profileMiddleware = require('./middleware/profile'),
   storage = {};
 
-app.use(profileMiddleware);
-app.use(bodyParserMiddleware());
+app.use(bodyParserMiddleware.urlencoded({ extended: false }));
 
-app.get('/', function(req, res) {
-  app.use(bodyParser());
+app.get('/', profileMiddleware, function(req, res) {
+  res.sendfile('index.html');
 });
 
 app.post('/data', function(req, res) {
