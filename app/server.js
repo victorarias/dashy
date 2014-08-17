@@ -5,7 +5,7 @@ const
   io = require('socket.io')(http),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
-  profileMiddleware = require('./middleware/profile'),
+  profileMiddleware = require('./middlewares/profile'),
   storage = {};
 
 app.set('views', path.join(__dirname, 'views'));

@@ -49,7 +49,7 @@ describe('Profile middleware', function() {
   });
 
   function subject() {
-    return require('../../app/middleware/profile');
+    return require('../../app/middlewares/profile');
   }
 
   function getValidTokenFor(middleware) {
