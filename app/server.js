@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(bodyParserMiddleware.json());
 
 app.get('/', profileMiddleware, function(req, res) {
-  res.render('index');
+  res.render('index', { token: req.query.token });
 });
 
 app.post('/data', function(req, res) {

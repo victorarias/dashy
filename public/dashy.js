@@ -1,11 +1,18 @@
-window.socket = io();
+window.socket = io.connect('http://localhost:3000', {
+  query: 'token=' + window.TOKEN
+});
+
 var emitter = new Emitter();
 
 new Widget("_wow_another_worker_").start();
 new Widget("_worker_data_key_").start();
 
 socket.on('connect', function(socket) {
-  $("#connection-status").text("Connected");
+  $('#connection-status').text('Connected');
+});
+
+socket.on('disconnect', function() {
+  $('#connection-status').text('Not connected');
 });
 
 socket.on('message', function(message) {
