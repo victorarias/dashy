@@ -1,15 +1,21 @@
 extends layout
 
 block content
+  #connection-status.
+    Not connected
   ul.messages
 
 block end-of-body
   script.
-    var socket = io();
+    window.socket = io();
     var emitter = new Emitter();
 
     new Widget("_wow_another_worker_").start();
     new Widget("_worker_data_key_").start();
+
+    socket.on('connect', function(socket) {
+      $("#connection-status").text("Connected");
+    });
 
     socket.on('message', function(message) {
       emitter.emit(message.key, message.data);

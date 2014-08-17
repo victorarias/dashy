@@ -6,12 +6,17 @@ var Browser = require('zombie');
 
 module.exports = function() {
   beforeEach(function() {
-    this.server = http.createServer(app).listen(3000);
-    this.browser = new Browser({ site: 'http://localhost:3000'});
-    this.browser.silent = true;
+    var httpServer = http.Server(app);
+    app.messageBus.start(httpServer);
+
+    this.server = httpServer.listen(3000);
+    this.browser = new Browser({ site: 'http://localhost:3000', debug: false});
   });
 
   afterEach(function(done) {
+    if(this.browser.window && this.browser.window.socket) {
+      this.browser.window.socket.disconnect(true);
+    }
     this.server.close(done);
   });
 };

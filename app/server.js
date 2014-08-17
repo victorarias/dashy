@@ -1,12 +1,15 @@
 const
   express = require('express')
   app = express(),
-  http = require('http').Server(app),
-  io = require('socket.io')(http),
+  httpServer = require('http').Server(app),
+  messageBus = require('./message_bus')(app),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
   profileMiddleware = require('./middlewares/profile'),
   storage = {};
+
+module.exports = app;
+app.messageBus = messageBus;
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -21,15 +24,14 @@ app.get('/', profileMiddleware, function(req, res) {
 app.post('/data', function(req, res) {
   var message = req.body;
   storage[message.key] = message.data;
-  io.emit('message', message);
+  messageBus.emit('message', message);
 });
 
 app.get('/data/:key', function(req, res) {
   res.json({ data: storage[req.params.key] });
 });
 
-module.exports = app;
-
 if(!module.parent) {
-  http.listen(process.env.PORT || 3000);
+  messageBus.start(httpServer);
+  httpServer.listen(process.env.PORT || 3000);
 }
