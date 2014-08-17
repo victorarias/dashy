@@ -1,15 +1,21 @@
 const
-  app = require('express')(),
+  express = require('express')
+  app = express(),
   http = require('http').Server(app),
   io = require('socket.io')(http),
+  path = require('path'),
   bodyParserMiddleware = require('body-parser'),
   profileMiddleware = require('./middleware/profile'),
   storage = {};
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
 app.use(bodyParserMiddleware.json());
 
 app.get('/', profileMiddleware, function(req, res) {
-  res.sendfile('index.html');
+  res.render('index');
 });
 
 app.post('/data', function(req, res) {
