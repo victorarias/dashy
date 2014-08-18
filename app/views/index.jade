@@ -4,8 +4,10 @@ block content
   #connection-status.
     Not connected
   ul.messages
+  ds-widget(source-key="_worker_data_key_")
 
 block end-of-body
   script.
     window.TOKEN = "!{ token }";
+  script(src="/angular.js")
   script(src="/dashy.js")

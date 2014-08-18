@@ -2,10 +2,54 @@ window.socket = io.connect('http://localhost:3000', {
   query: 'token=' + window.TOKEN
 });
 
-var emitter = new Emitter();
+app = angular.module('dashboard', []);
 
-new Widget("_wow_another_worker_").start();
-new Widget("_worker_data_key_").start();
+app.service('MessagePump', function($rootScope) {
+  var events = {};
+  var messagePump = {
+    on: function(eventName, callback) {
+      events[eventName] = events[eventName] || [];
+      events[eventName].push(callback);
+    },
+    emit: function(eventName, data) {
+      listeners = (events[eventName] || []);
+
+      $rootScope.$apply(function() {
+        listeners.forEach(function(listener) {
+          listener.call(undefined, data);
+        });
+      })
+    },
+    initializeAndAttach: function(eventName, callback) {
+      var that = this;
+      $.get('/data/' + eventName, function(result) {
+        callback(result.data);
+        that.on(eventName, callback);
+      });
+    }
+  };
+
+  socket.on('message', function(message) {
+    messagePump.emit(message.key, message.data);
+  });
+
+  return messagePump;
+});
+
+app.directive('dsWidget', function() {
+  return {
+    restrict: 'E',
+    scope: {
+      sourceKey: '@'
+    },
+    controller: function($scope, $interval, MessagePump) {
+      MessagePump.initializeAndAttach($scope.sourceKey, function(value) {
+        $scope.value = value;
+      });
+    },
+    template: '{{value}}'
+  };
+});
 
 socket.on('connect', function(socket) {
   $('#connection-status').text('Connected');
@@ -14,59 +58,3 @@ socket.on('connect', function(socket) {
 socket.on('disconnect', function() {
   $('#connection-status').text('Not connected');
 });
-
-socket.on('message', function(message) {
-  emitter.emit(message.key, message.data);
-});
-
-function Emitter() {
-  var events = {};
-
-  return {
-    on: function(eventName, callback) {
-      events[eventName] = events[eventName] || [];
-      events[eventName].push(callback);
-    },
-    emit: function(eventName, data) {
-      listeners = (events[eventName] || []);
-
-      listeners.forEach(function(listener) {
-        listener.call(undefined, data);
-      });
-    }
-  };
-}
-
-function Widget(key) {
-  function listenToNewEvents() {
-    emitter.on(key, function(data) {
-      handleNewValue(data);
-    });
-  }
-
-  function handleNewValue(value) {
-    var element = $("#" + key);
-
-    if(element.length == 0) {
-      element = $("<div class='widget'>").appendTo($("body"));
-      element.attr("id", key);
-    }
-
-    element.text(value);
-  }
-
-  function fetchCurrentValue(callback) {
-    $.get('/data/' + key, function(result) {
-      callback(result.data);
-    });
-  }
-
-  return {
-    start: function() {
-      fetchCurrentValue(function(value) {
-        handleNewValue(value);
-        listenToNewEvents();
-      });
-    }
-  };
-}
