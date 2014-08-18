@@ -14,7 +14,7 @@ Run
 =====
 
 1. Start the web app
-`node --harmony dashy_frontend.js`
+`node --harmony app/server.js`
 2. Start the workers
 `node --harmony dashy_worker.js`
 `node --harmony dashy_worker2.js`
