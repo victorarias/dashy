@@ -1,5 +1,6 @@
 const TOKENS = {
-  "123": "developer"
+  "123": "developer",
+  "456": "super"
 };
 
 var middleware = function(req, res, next) {

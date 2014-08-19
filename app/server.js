@@ -2,7 +2,7 @@ const
   express = require('express')
   app = express(),
   httpServer = require('http').Server(app),
-  messageBus = require('./message_bus')(app),
+  messageBus = require('./message_bus')(app, require('socket.io')),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
   profileMiddleware = require('./middlewares/profile'),

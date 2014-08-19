@@ -10,7 +10,7 @@ setInterval(function() {
   console.log("Pushing payload: " + counter);
   request
     .post('http://localhost:3000/data')
-    .send({ key: DATA_KEY, data: counter })
+    .send({ key: DATA_KEY, data: counter, profile: "developer" })
     .end(function(err, res) {
     });
 }, 1000);

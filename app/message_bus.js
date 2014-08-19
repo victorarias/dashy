@@ -1,22 +1,27 @@
-const Connection = require('./connection')
+const Connection = require('./connection'),
+  profileMiddlware = require('./middlewares/profile');
 
-module.exports = function(app) {
+//TODO: extract profile to its own file/type
+
+module.exports = function(app, io) {
   function onConnection(socket) {
     var conn = new Connection(socket);
+    var profile = profileMiddleware.TOKENS[conn.token];
 
-    if(conn.token !== "123") {
+    if(profile) {
+      socket.join(profile);
+    } else {
       conn.close();
     }
   };
 
   return {
     start: function(httpServer) {
-      this.io = require('socket.io')(httpServer);
-
+      this.io = io(httpServer);
       this.io.on('connection', onConnection);
     },
     emit: function(message, payload) {
-      this.io.emit(message, payload);
+      this.io.to(payload.profile).emit(message, payload);
     }
   };
 }
