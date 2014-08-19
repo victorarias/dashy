@@ -33,5 +33,8 @@ app.get('/data/:key', function(req, res) {
 
 if(!module.parent) {
   messageBus.start(httpServer);
-  httpServer.listen(process.env.PORT || 3000);
+  var port = process.env.PORT || 3000;
+  httpServer.listen(port, function() {
+    console.log("Listening at " + port);
+  });
 }
