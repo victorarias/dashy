@@ -1,5 +1,5 @@
 const Connection = require('./connection'),
-  profileMiddlware = require('./middlewares/profile');
+  profileMiddleware = require('./middlewares/profile');
 
 //TODO: extract profile to its own file/type
 

@@ -5,7 +5,6 @@ const
   messageBus = require('./message_bus')(app, require('socket.io')),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
-  profileMiddleware = require('./middlewares/profile'),
   storage = {};
 
 module.exports = app;
@@ -17,11 +16,11 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(bodyParserMiddleware.json());
 
-require('./handlers/data')(app, storage, messageBus);
-
-app.get('/', profileMiddleware, function(req, res) {
-  res.render('index', { token: req.query.token });
-});
+var container = {
+  storage: storage,
+  messageBus: messageBus
+}
+require('./routes_loader')(app, container);
 
 if(!module.parent) {
   messageBus.start(httpServer);
