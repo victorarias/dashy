@@ -16,11 +16,12 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use(bodyParserMiddleware.json());
 
-var container = {
-  storage: storage,
-  messageBus: messageBus
-}
-require('./routes_loader')(app, container);
+var DIContainer = require('./di');
+var diContainer = new DIContainer();
+diContainer.register('storage', storage);
+diContainer.register('messageBus', messageBus);
+
+require('./routes_loader')(app, diContainer);
 
 if(!module.parent) {
   messageBus.start(httpServer);

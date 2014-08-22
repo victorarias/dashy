@@ -1,7 +1,4 @@
-module.exports = function(dependencyContainer) {
-  var storage = dependencyContainer.storage,
-    messageBus = dependencyContainer.messageBus;
-
+module.exports = function(storage, messageBus) {
   return [
     {
       method: "post",

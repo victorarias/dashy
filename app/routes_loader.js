@@ -1,8 +1,9 @@
 const fs = require('fs');
 
-module.exports = function(app, dependencyContainer) {
+module.exports = function(app, diContainer) {
   fs.readdirSync(__dirname + '/routes/').forEach(function(file) {
-    var routes = require('./routes/' + file)(dependencyContainer);
+    var routesFactory = require('./routes/' + file);
+    var routes = diContainer.inject(routesFactory)();
 
     routes.forEach(function(route) {
       var middlewares = route['middlewares'] || [];
