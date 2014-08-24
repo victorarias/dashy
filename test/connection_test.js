@@ -1,7 +1,8 @@
 const
   Connection = require('../app/connection'),
-  assert = require('assert'),
-  sinon = require('sinon');
+  spec_helper = require('./spec_helper'),
+  sinon = spec_helper.sinon,
+  expect = spec_helper.expect;
 
 describe("Connection", function() {
   describe("#token", function() {
@@ -9,21 +10,21 @@ describe("Connection", function() {
       var socket = { handshake: { query: { token: "such token" } } };
       var conn = new Connection(socket);
 
-      assert.equal(conn.token, "such token");
+      expect(conn.token).to.equal('such token');
     });
 
     it("returns undefined when there is no query", function() {
       var socket = { handshake: {} };
       var conn = new Connection(socket);
 
-      assert.equal(conn.token, undefined);
+      expect(conn.token).to.eq(undefined);
     });
 
     it("returns undefined when there is no token", function() {
       var socket = { handshake: { query: {} } };
       var conn = new Connection(socket);
 
-      assert.equal(conn.token, undefined);
+      expect(conn.token).to.eq(undefined);
     });
   });
 
@@ -34,7 +35,7 @@ describe("Connection", function() {
 
       conn.close();
 
-      assert(socket.disconnect.calledOnce);
+      expect(socket.disconnect.calledOnce).to.be.true;
     });
   });
 });

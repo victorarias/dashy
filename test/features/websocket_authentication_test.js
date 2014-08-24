@@ -1,6 +1,6 @@
 const
   browserContext = require('./browser_context'),
-  assert = require('assert');
+  expect = require('../spec_helper').expect;
 
 describe('#feature websocket authentication', function() {
   browserContext();
@@ -10,7 +10,7 @@ describe('#feature websocket authentication', function() {
 
     browser.visit('/?token=123', function() {
       browser.assert.success();
-      assert.equal(browser.text('#connection-status'), 'Connected')
+      expect(browser.text('#connection-status')).to.eq('Connected')
       done();
     });
   });

@@ -1,6 +1,6 @@
-const assert = require('assert'),
-  sinon = require('sinon')
-
+const spec_helper = require('../spec_helper'),
+  sinon = spec_helper.sinon,
+  expect = spec_helper.expect;
 
 describe('Profile middleware', function() {
   it('it assigns a profile to the request', function() {
@@ -9,7 +9,7 @@ describe('Profile middleware', function() {
 
     middleware(req, {}, function() {});
 
-    assert.equal("developer", req.profile);
+    expect(req.profile).to.eq("developer");
   });
 
   it('sends an 403 forbidden response if the token is not valid', function() {
@@ -21,7 +21,7 @@ describe('Profile middleware', function() {
 
     middleware(req, res, function() {});
 
-    assert(spy.calledWith(403));
+    expect(spy.calledWith(403)).to.eq(true);
   });
 
   it('sends an 403 forbidden response if there is no token', function() {
@@ -33,7 +33,7 @@ describe('Profile middleware', function() {
 
     middleware(req, res, function() {});
 
-    assert(spy.calledWith(403));
+    expect(spy.calledWith(403)).to.eq(true);
   });
 
   it('sends "Invalid token" as the body when there is no token', function() {
@@ -45,7 +45,7 @@ describe('Profile middleware', function() {
 
     middleware(req, res, function() {});
 
-    assert(spy.calledWith('Invalid token.'));
+    expect(spy.calledWith('Invalid token.')).to.eq(true);
   });
 
   function subject() {

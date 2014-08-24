@@ -16,6 +16,7 @@
     "superagent": "^0.18.2"
   },
   "devDependencies": {
+    "chai": "^1.9.1",
     "sinon": "^1.10.3",
     "zombie": "2.0.0-alpha31"
   }
