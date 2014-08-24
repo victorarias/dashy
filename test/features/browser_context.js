@@ -7,9 +7,10 @@ var Browser = require('zombie');
 module.exports = function() {
   beforeEach(function() {
     var httpServer = http.Server(app);
+    this.server = httpServer.listen(3000);
+
     app.messageBus.start(httpServer);
 
-    this.server = httpServer.listen(3000);
     this.browser = new Browser({ site: 'http://127.0.0.1:3000', debug: false});
   });
 
