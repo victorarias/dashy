@@ -28,12 +28,12 @@ describe("Connection", function() {
     });
   });
 
-  describe('#close', function() {
-    it('closes the socket', function() {
+  describe('#disconnect', function() {
+    it('disconnects the socket', function() {
       var socket = { handshake: {}, disconnect: sinon.spy() };
       var conn = new Connection(socket);
 
-      conn.close();
+      conn.disconnect();
 
       expect(socket.disconnect.calledOnce).to.be.true;
     });

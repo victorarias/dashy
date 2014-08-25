@@ -1,7 +1,7 @@
 const
   express = require('express')
   app = express(),
-  messageBus = require('./message_bus')(app, require('socket.io')),
+  messageBus = require('./message_bus')(require('socket.io')),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
   storage = {};

@@ -3,7 +3,7 @@ const Connection = require('./connection'),
 
 //TODO: extract profile to its own file/type
 
-module.exports = function(app, io) {
+module.exports = function(io) {
   function onConnection(socket) {
     var conn = new Connection(socket);
     var profile = profileMiddleware.TOKENS[conn.token];
@@ -11,7 +11,7 @@ module.exports = function(app, io) {
     if(profile) {
       socket.join(profile);
     } else {
-      conn.close();
+      conn.disconnect();
     }
   };
 
@@ -19,9 +19,11 @@ module.exports = function(app, io) {
     start: function(httpServer) {
       this.io = io(httpServer);
       this.io.on('connection', onConnection);
+
+      return this;
     },
-    emit: function(message, payload) {
-      this.io.to(payload.profile).emit(message, payload);
+    emit: function(message, content) {
+      this.io.to(content.profile).emit(message, content);
     }
   };
 }

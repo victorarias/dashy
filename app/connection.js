@@ -8,7 +8,7 @@ module.exports = function Connection(socket) {
 
   return {
     token: getToken(),
-    close: function() {
+    disconnect: function() {
       socket.disconnect();
     }
   };
