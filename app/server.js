@@ -4,7 +4,7 @@ const
   messageBus = require('./message_bus')(require('socket.io')),
   path = require('path'),
   bodyParserMiddleware = require('body-parser'),
-  storage = {};
+  storage = require('./storage');
 
 module.exports = app;
 app.messageBus = messageBus;
@@ -26,7 +26,7 @@ if(!module.parent) {
   var httpServer = require('http').Server(app);
   var port = process.env.PORT || 3000;
   httpServer.listen(port, function() {
-    console.log("Listening at " + port);
+    console.log('Listening at ' + port);
     messageBus.start(httpServer);
   });
 }

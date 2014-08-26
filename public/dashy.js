@@ -22,7 +22,7 @@ app.service('MessagePump', function($rootScope) {
     },
     initializeAndAttach: function(eventName, callback) {
       var that = this;
-      $.get('/data/' + eventName, function(result) {
+      $.get('/data/' + eventName + '?token=' + window.TOKEN, function(result) {
         callback(result.data);
         that.on(eventName, callback);
       });

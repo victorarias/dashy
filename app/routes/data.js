@@ -7,7 +7,7 @@ module.exports = function(storage, messageBus) {
       url: "/data",
       fn: function(req, res) {
         var message = req.body;
-        storage[message.key] = message.data;
+        storage.set(req.profile, message.key, message.data);
         messageBus.emit('message', message);
       }
     },
