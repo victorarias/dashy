@@ -1,3 +1,5 @@
+const profileMiddleware = require('../middlewares/profile');
+
 module.exports = function(storage, messageBus) {
   return [
     {
@@ -12,8 +14,9 @@ module.exports = function(storage, messageBus) {
     {
       method: 'get',
       url: '/data/:key',
+      middlewares: [ profileMiddleware ],
       fn: function(req, res) {
-        res.json({ data: storage[req.params.key] });
+        res.json({ data: storage.get(req.profile, req.params.key) });
       }
     }
   ]

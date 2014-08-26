@@ -4,5 +4,6 @@ module.exports = {
   assert: require('assert'),
   chai: chai,
   expect: chai.expect,
-  sinon: require('sinon')
+  sinon: require('sinon'),
+  _: require('lodash')
 };
