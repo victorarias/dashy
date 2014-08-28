@@ -1,8 +1,8 @@
-const profile = require('../profile')
+const Profile = require('../profile')
 
 var middleware = function(req, res, next) {
   var token = req.query.token;
-  var requestProfile = profile.get(token);
+  var requestProfile = Profile.get(token);
 
   if(requestProfile) {
     req.profile = requestProfile;
@@ -15,5 +15,5 @@ var middleware = function(req, res, next) {
   next();
 };
 
-middleware.TOKENS = profile.TOKENS;
+middleware.TOKENS = Profile.TOKENS;
 module.exports = middleware;

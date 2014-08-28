@@ -1,12 +1,10 @@
 const Connection = require('./connection'),
-  profileMiddleware = require('./middlewares/profile');
-
-//TODO: extract profile to its own file/type
+  Profile = require('./profile');
 
 module.exports = function(io) {
   function onConnection(socket) {
     var conn = new Connection(socket);
-    var profile = profileMiddleware.TOKENS[conn.token];
+    var profile = Profile.get(conn.token);
 
     if(profile) {
       socket.join(profile);

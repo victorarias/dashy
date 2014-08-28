@@ -1,4 +1,5 @@
 const spec_helper = require('../spec_helper'),
+  Profile = require('../../app/profile'),
   sinon = spec_helper.sinon,
   expect = spec_helper.expect;
 
@@ -53,7 +54,7 @@ describe('Profile middleware', function() {
   }
 
   function getValidTokenFor(middleware) {
-    return Object.keys(middleware.TOKENS)[0];
+    return Object.keys(Profile.TOKENS)[0];
   }
 
   function getResponseDouble() {
