@@ -29,4 +29,26 @@ describe('Data handler', function() {
       expect(res.json.calledWith({ data: undefined })).to.eq(true);
     });
   });
+
+  describe('POST /data', function() {
+    beforeEach(function() {
+      var route = this.resolveRoute('post', '/data');
+      var payload = { key: 'key', data: 'data' }
+      var req = { body: payload, profile: 'profile' };
+      var res = { json: sinon.stub() };
+
+      route(req, res);
+
+      this.payload = payload;
+    });
+
+    it('stores posted payload', function() {
+      expect(this.storage.get('profile', 'key')).to.eq('data');
+    });
+
+    it('emits the payload', function() {
+      var payload = this.payload;
+      expect(this.messageBus.emit.calledWith('message', payload)).to.eq(true);
+    });
+  });
 });
