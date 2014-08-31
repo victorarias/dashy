@@ -12,6 +12,7 @@ module.exports = function() {
     app.messageBus.start(httpServer);
 
     this.browser = new Browser({ site: 'http://127.0.0.1:3000', debug: false});
+    this.app = app;
   });
 
   afterEach(function(done) {

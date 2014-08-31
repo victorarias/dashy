@@ -23,8 +23,10 @@ app.service('MessagePump', function($rootScope) {
     initializeAndAttach: function(eventName, callback) {
       var that = this;
       $.get('/data/' + eventName + '?token=' + window.TOKEN, function(result) {
-        callback(result.data);
-        that.on(eventName, callback);
+        $rootScope.$apply(function() {
+          callback(result.data);
+          that.on(eventName, callback);
+        });
       });
     }
   };
@@ -47,7 +49,11 @@ app.directive('dsWidget', function() {
         $scope.value = value;
       });
     },
-    template: '{{value}}'
+    link: function($scope, element, attributes) {
+      $scope.$watch('value', function(newValue) {
+        element.text(newValue);
+      });
+    }
   };
 });
 
