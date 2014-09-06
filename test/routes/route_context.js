@@ -11,6 +11,7 @@ module.exports = function() {
     this.storage = storage;
     this.messageBus = messageBus;
     this.resolveRoute = resolveRoute;
+    this.createResponse = createResponse;
   });
 
   function resolveRoute(method, url) {
@@ -18,5 +19,19 @@ module.exports = function() {
       return route.method == method && route.url == url;
     });
     return routes[idx].fn;
+  }
+
+  function createResponse() {
+    var res = {
+      json: function(data) {
+        this.jsonData = data;
+        return this;
+      },
+      end: function() { return this; }
+    };
+
+    sinon.spy(res, 'end');
+
+    return res;
   }
 }

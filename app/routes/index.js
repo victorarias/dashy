@@ -7,7 +7,7 @@ module.exports = function() {
       url: '/',
       middlewares: [ profileMiddleware ],
       fn: function(req, res) {
-        res.render('index', { token: req.query.token });
+        res.render('index', { token: req.query.token }).end();
       }
     }
   ];

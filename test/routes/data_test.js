@@ -10,23 +10,27 @@ describe('Data handler', function() {
     it('returns data associated with the key in the current profile', function() {
       var route = this.resolveRoute('get', '/data/:key');
       var req = { params: { key: 'key' }, profile: 'profile' };
-      var res = { json: sinon.spy() };
+      var res = this.createResponse();
+
       this.storage.set('profile', 'key', 'data')
 
       route(req, res);
 
-      expect(res.json.calledWith({ data: 'data' })).to.eq(true);
+      expect(res.jsonData).to.deep.eq({ data: 'data' });
+      expect(res.end.called).to.eq(true);
     });
 
     it('restricts access to data associated to the profile', function() {
       var route = this.resolveRoute("get", "/data/:key");
       var req = { params: { key: 'key' }, profile: 'profileX' };
-      var res = { json: sinon.spy() };
+      var res = this.createResponse();
+
       this.storage.set('profileY', 'key', 'data')
 
       route(req, res);
 
-      expect(res.json.calledWith({ data: undefined })).to.eq(true);
+      expect(res.jsonData).to.deep.eq({ data: undefined });
+      expect(res.end.called).to.eq(true);
     });
   });
 
@@ -35,20 +39,23 @@ describe('Data handler', function() {
       var route = this.resolveRoute('post', '/data');
       var payload = { key: 'key', data: 'data' }
       var req = { body: payload, profile: 'profile' };
-      var res = { json: sinon.stub() };
+      var res = this.createResponse();
 
       route(req, res);
 
       this.payload = payload;
+      this.res = res;
     });
 
     it('stores posted payload', function() {
       expect(this.storage.get('profile', 'key')).to.eq('data');
+      expect(this.res.end.called).to.eq(true);
     });
 
     it('emits the payload', function() {
       var payload = this.payload;
       expect(this.messageBus.emit.calledWith('message', payload)).to.eq(true);
+      expect(this.res.end.called).to.eq(true);
     });
   });
 });

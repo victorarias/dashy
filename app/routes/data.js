@@ -9,6 +9,7 @@ module.exports = function(storage, messageBus) {
         var message = req.body;
         storage.set(req.profile, message.key, message.data);
         messageBus.emit('message', message);
+        res.end();
       }
     },
     {
@@ -16,7 +17,9 @@ module.exports = function(storage, messageBus) {
       url: '/data/:key',
       middlewares: [ profileMiddleware ],
       fn: function(req, res) {
-        res.json({ data: storage.get(req.profile, req.params.key) });
+        res = res.
+          json({ data: storage.get(req.profile, req.params.key) }).
+          end();
       }
     }
   ]
